@@ -1,4 +1,4 @@
-package es.avalon.repositorios;
+package es.avalon.repositorios.jpa;
 
 import java.util.List;
 
@@ -6,60 +6,49 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import es.avalon.jpa.negocio.Libro;
+import es.avalon.repositorios.LibroRepositorio;
 
-public class LibroRepositorioJPA {
+@Repository
+public class LibroRepositorioJPA implements LibroRepositorio {
 	
-	EntityManagerFactory emf= Persistence.createEntityManagerFactory("UnidadLibros");
+	@PersistenceContext
+	EntityManager em;
 	
 	public List<Libro> buscarTodos(){
-
-		EntityManager em=emf.createEntityManager();
 		TypedQuery<Libro> consulta=em.createQuery("select l from Libro l",Libro.class);
 		return consulta.getResultList();
 	}	
+	
 	public void insertar(Libro libro) {
-		EntityManager em=emf.createEntityManager();
-		EntityTransaction t=em.getTransaction();
-		t.begin();
 		em.persist(libro);
-		t.commit();
-		em.close();
+		
 	}
+	
 	public void borrar(Libro libro) {
-		EntityManager em=emf.createEntityManager();
-		EntityTransaction t=em.getTransaction();
-		t.begin();
 		Libro libroGestionado = em.merge(libro);
 		em.remove(libroGestionado);
-		t.commit();
-		em.close();
+		
 	}
+	
 	public Libro buscarUno(String titulo) {
-		EntityManager em=emf.createEntityManager();
 		Libro libro = em.find(Libro.class, titulo);
-		em.close();
 		return libro;
 
 	}
+	
 	public void salvar(Libro milibro) {
-		EntityManager em=emf.createEntityManager();
-		EntityTransaction t=em.getTransaction();
-		t.begin();
 		em.merge(milibro);
-		t.commit();
-		em.close();
-	}
-	public List<Libro> buscarTodosOrdenados(String columna){
-//		EntityManager em=emf.createEntityManager();
-//		TypedQuery<Libro> consulta=em.createQuery("select l from Libro l order by l."+columna,Libro.class);
-//		return consulta.getResultList();
 		
-		EntityManager em=emf.createEntityManager();
+	}
+	
+	public List<Libro> buscarTodosOrdenados(String columna){
 		TypedQuery<Libro> consulta = null;
 		if (columna.equals("titulo")){
 		 consulta=em.createQuery("select l from Libro l order by titulo",Libro.class);
