@@ -43,6 +43,8 @@ public abstract class GenericRepositoryJPA<T, K> implements GenericRepository<T,
 	        criteriaQuery.select(root);
 	        TypedQuery<T> query = em.createQuery(criteriaQuery);
 	        return query.getResultList();
-	    	
 	    }
+	    
+	    
+	    
 	}
