@@ -25,9 +25,12 @@ public class CategoriaRepositorioJPA extends GenericRepositoryJPA <Categoria, In
 
 	public CategoriaRepositorioJPA() {
 		super(Categoria.class);
-
-
 	}
 
+	public List<Libro> buscarLibrosPorCategoria(Categoria c){
+		TypedQuery<Libro> consulta=em.createQuery("select l from Libro l where :categoria MEMBER OF l.categorias",Libro.class);
+		consulta.setParameter("categoria", c);
+		return consulta.getResultList();
+	}
 
 }
