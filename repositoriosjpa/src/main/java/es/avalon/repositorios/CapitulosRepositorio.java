@@ -8,6 +8,8 @@ import es.avalon.jpa.negocio.Capitulo;
 import es.avalon.jpa.negocio.Libro;
 
 public interface CapitulosRepositorio extends JpaRepository<Capitulo, String>{
+	
+	public Iterable<Capitulo> findAllByLibro(Libro libro);
 
 	
 
